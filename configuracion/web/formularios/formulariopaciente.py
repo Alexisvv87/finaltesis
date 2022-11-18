@@ -36,17 +36,17 @@ class Formularipaciente(forms.Form):
     TipoAfiliado=forms.ChoiceField(
         widget=forms.Select(attrs={"class":"form-select mb-3"}),
         required=True,
-        choices=TIPOAFILIADO
+        choices=TipoAfiliado
     )
     Regimen=forms.ChoiceField(
         widget=forms.Select(attrs={"class":"form-select mb-3"}),
         required=True,
-        choices=Regimenes
+        choices=Regimen
     )
     
     Grupo_ingresos =forms.ChoiceField(
         widget=forms.Select(attrs={"class":"form-select mb-3"}),
         required=True,
-        choices=GRUPOINGRESOS
+        choices=Grupo_ingresos
     ) 
     

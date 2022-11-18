@@ -17,6 +17,7 @@ class AuthGroup(models.Model):
 
 
 class AuthGroupPermissions(models.Model):
+    id = models.BigAutoField(primary_key=True)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
     permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
 
@@ -27,9 +28,9 @@ class AuthGroupPermissions(models.Model):
 
 
 class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
     codename = models.CharField(max_length=100)
-    name = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -40,14 +41,14 @@ class AuthPermission(models.Model):
 class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.BooleanField()
+    is_superuser = models.IntegerField()
     username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
     date_joined = models.DateTimeField()
-    first_name = models.CharField(max_length=150)
 
     class Meta:
         managed = False
@@ -55,6 +56,7 @@ class AuthUser(models.Model):
 
 
 class AuthUserGroups(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
@@ -65,6 +67,7 @@ class AuthUserGroups(models.Model):
 
 
 class AuthUserUserPermissions(models.Model):
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
@@ -75,13 +78,13 @@ class AuthUserUserPermissions(models.Model):
 
 
 class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
     object_repr = models.CharField(max_length=200)
     action_flag = models.PositiveSmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    action_time = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -99,6 +102,7 @@ class DjangoContentType(models.Model):
 
 
 class DjangoMigrations(models.Model):
+    id = models.BigAutoField(primary_key=True)
     app = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     applied = models.DateTimeField()
@@ -116,3 +120,31 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class Medicos(models.Model):
+    nombres = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
+    cedula = models.CharField(max_length=12)
+    targeta = models.CharField(max_length=20)
+    especialidad = models.IntegerField()
+    jornada = models.IntegerField()
+    contacto = models.CharField(max_length=15)
+    sede = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'medicos'
+
+
+class Pacientes(models.Model):
+    nombrepaciente = models.CharField(max_length=50)
+    apellidospaciente = models.CharField(db_column='apellidosPaciente', max_length=50)  # Field name made lowercase.
+    cedulapaciente = models.CharField(db_column='cedulaPaciente', max_length=50)  # Field name made lowercase.
+    field_tipoafiliado = models.CharField(db_column=' TipoAfiliado', max_length=50)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it started with '_'.
+    field_regimen = models.CharField(db_column='  Regimen', max_length=10)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it started with '_'.
+    field_grupo_ingresos = models.CharField(db_column='   Grupo_ingresos', max_length=11)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it started with '_'.
+
+    class Meta:
+        managed = False
+        db_table = 'pacientes'
